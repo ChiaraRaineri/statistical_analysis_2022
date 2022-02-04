@@ -9,15 +9,12 @@ dir.create("data")
 
 
 # 2)
-# Setting the working directory
-setwd("C:/project_exam/data")
-
 # Importing the data
 # Assigning a name to the data
-community_matrix <- read.csv("BCI.csv")
-community_matrix
-env_variables <- read.csv("BCI_env.txt")
-env_variables
+species <- read.csv("data/BCI.csv")
+species
+env_var <- read.txt("data/BCI_env.txt")
+env_var
 
 # class(env_variables)
 # class(community_matrix)
