@@ -10,11 +10,18 @@ dir.create("data")
 
 # 2)
 # Importing the data
-# Assigning a name to the data
-species <- read.csv("data/BCI.csv")
-species
-env_var <- read.txt("data/BCI_env.txt")
-env_var
+BCI <- read.csv("data/BCI.csv")
+BCI
+BCI_env <- read.table("data/BCI_env.txt", sep = " ", header = T)  
+BCI_env
+
+# How I solved problems on BCI_env: 
+View(BCI_env)
+# Problem: if I do the function View I can't see the names of the columns up above, so I write header = T
+# Error: line 16 did not have 9 elements (9 columns but not enough elements!)
+# To solve this error I write fill = T so BCI_env <- read.table("data/BCI_env.txt", fill = T, header = T)
+# But this method shifts the values to the left, so I put sep = " " instead of fill
+
 
 # class(env_variables)
 # class(community_matrix)
