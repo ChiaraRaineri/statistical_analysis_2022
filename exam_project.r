@@ -22,30 +22,64 @@ View(BCI_env)
 # To solve this error I write fill = T so BCI_env <- read.table("data/BCI_env.txt", fill = T, header = T)
 # But this method shifts the values to the left, so I put sep = " " instead of fill
 
-
-# class(env_variables)
-# class(community_matrix)
-# Extracting the informations about column names, class and row names
-attributes(community_matrix)
-attributes(env_variables)
-
 # Counting the number of rows and columns
-dim(community_matrix)
-dim(env_variables)
-# The number of observation refers to the rows, so the number of species and environmental variables refers to the columns
-# The columns indicates the species (225) and the environmental variables
+nrow(BCI)  # Number of observations
+ncol(BCI)  # Number of species
+nrow(BCI_env)  # Number of observations
+ncol(BCI_env)  # Number of environmental variables
+
+# dim(BCI)
+# dim(BCI_env)
 
 
 # 3)
 ?BCI
 # The elements that are missing from BCI_env are the names of the columns
+# I solved it in the process of importing data by adding sep
 
 
+# 4)
+# Let's do summary statistics
+# I notice there are some missing values and some NAs
+summary(BCI)
+summary(BCI_env)
 
+str(BCI)
+str(BCI_env)
 
-colnames(env_variables) <- c("UTM.EW", "UTM.NS", "Precipitation", "Elevation", "Age.cat", "Geology", "Habitat", "River", "EnvHet")
-env_variables
+# Removing NAs (it removes the whole row, not only the single cell)
+na.omit(BCI_env)
+# To check what happened
+nrow(BCI_env)
+nrow(na.omit(BCI_env))
+# But now I have BCI that has still 50 rows, so this is not a good method
 
+# Instead I should first check if there are NAs
+# is.na(BCI_env)
+index_na <- which(is.na(BCI_env), arr.ind = T)
+index_na <- index_na[, 1]  # To have just the first column 
+# Now I have a matrix that tells me exactly where the NA value is
+# I want to remove row 15
+BCI_env <- na.omit(BCI_env)
+nrow(BCI_env)
+BCI <- BCI[- index_na, ]
+nrow(BCI)
 
+# But there are also empty cells that are not NAs
+unique(BCI_env$Habitat)
+unique(BCI_env$Stream)
+# Put it at the beginning
+# na.strings convert blank cells into NAs
+BCI_env <- read.table("data/BCI_env.txt", 
+                      sep = " ", 
+                      header = T,
+                      na.strings = c("NA", ""))
+BCI_env
+index_na <- which(is.na(BCI_env), arr.ind = T)
+index_na <- index_na[, 1]
+BCI_env <- na.omit(BCI_env)
+nrow(BCI_env)
+BCI <- BCI[- index_na, ]
+nrow(BCI)
 
 
