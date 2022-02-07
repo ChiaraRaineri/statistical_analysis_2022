@@ -83,3 +83,12 @@ BCI <- BCI[- index_na, ]
 nrow(BCI)
 
 
+# 5)
+# BCI_env <- decostand(BCI_env, method = “pa”)
+# sort(specnumber(BCI_env, MARGIN = 2))
+# plot(sort(specnumber(BCI_env, MARGIN = 2), decreasing = T))
+
+
+
+
+
