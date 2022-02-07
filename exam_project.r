@@ -83,12 +83,32 @@ BCI <- BCI[- index_na, ]
 nrow(BCI)
 
 
-# 5)
-# BCI_env <- decostand(BCI_env, method = “pa”)
-# sort(specnumber(BCI_env, MARGIN = 2))
-# plot(sort(specnumber(BCI_env, MARGIN = 2), decreasing = T))
+# 5) ?
+# plot the univariate distribution (so the distribution of just one variable)
+# we have numerical variables and categorical variables
+barplot(BCI_env  # check minute 1h48 second coso
 
 
+# 6)
+# I use the function decostand with method pa to convert the table into presence-absence
+BCI_env <- decostand(BCI_env, method = “pa”)
+str(BCI_env)
 
 
+# 7a)
+# I use specnumber to calculate species richness 
+sr <- specnumber(BCI_env)
+sort(specnumber(BCI_env, MARGIN = 2))
+plot(sort(specnumber(BCI_env, MARGIN = 2), decreasing = T))
+
+# 7b)
+summary(BCI_env$sr)
+
+# c'è qualcosa che non va con l'istogramma
+# hist(BCI_env$sr, main = "", xlab = "species richness", ylab = "number of variables")
+# to export (res is for resolution): 
+# I have to modify width and lenght because the margins are not enough for the resolution I chose
+# png("Figure1.png", res = 300, width = 3000, height = 2000)
+# hist(BCI_env$sr, main = "", xlab = "species richness", ylab = "number of variables")
+# dev.off
 
