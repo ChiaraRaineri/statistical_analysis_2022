@@ -86,29 +86,35 @@ nrow(BCI)
 # 5) ?
 # plot the univariate distribution (so the distribution of just one variable)
 # we have numerical variables and categorical variables
-barplot(BCI_env  # check minute 1h48 second coso
+barplot(BCI_env)  
 
 
 # 6)
 # I use the function decostand with method pa to convert the table into presence-absence
-BCI_env <- decostand(BCI_env, method = “pa”)
-str(BCI_env)
+# The community matrix!
+BCI <- decostand(BCI, method = “pa”)
+str(BCI)
 
 
 # 7a)
 # I use specnumber to calculate species richness 
-sr <- specnumber(BCI_env)
-sort(specnumber(BCI_env, MARGIN = 2))
-plot(sort(specnumber(BCI_env, MARGIN = 2), decreasing = T))
+sr <- specnumber(BCI)
+sort(specnumber(BCI, MARGIN = 2))
+plot(sort(specnumber(BCI, MARGIN = 2), decreasing = T))
+
+# add it to the environmental variables dataframe as a new column.
+# Can be BCI_env$sr <- specnumber(BCI) but I don't know
 
 # 7b)
-summary(BCI_env$sr)
+summary(sr)
 
-# c'è qualcosa che non va con l'istogramma
-# hist(BCI_env$sr, main = "", xlab = "species richness", ylab = "number of variables")
+
+hist(sr, main = "", xlab = "species richness", ylab = "number of variables")
 # to export (res is for resolution): 
 # I have to modify width and lenght because the margins are not enough for the resolution I chose
-# png("Figure1.png", res = 300, width = 3000, height = 2000)
-# hist(BCI_env$sr, main = "", xlab = "species richness", ylab = "number of variables")
-# dev.off
+png("Figure1.png", res = 300, width = 3000, height = 2000)
+hist(sr, main = "", xlab = "species richness", ylab = "number of variables")
+dev.off
+
+
 
