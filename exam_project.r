@@ -4,8 +4,8 @@ library(vegan)
 
 # 1)
 # Creating sub-folders
-dir.create("outputs")
-dir.create("data")
+# dir.create("outputs")
+# dir.create("data")
 
 
 # 2)
