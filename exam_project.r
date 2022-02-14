@@ -10,9 +10,9 @@ library(vegan)
 
 # 2)
 # Importing the data
-BCI <- read.csv("data/BCI.csv")
+BCI <- read.csv("data/BCI.csv")  # Community matrix
 BCI
-BCI_env <- read.table("data/BCI_env.txt", sep = " ", header = T)  
+BCI_env <- read.table("data/BCI_env.txt", sep = " ", header = T)  # Environmental variables
 BCI_env
 
 # How I solved problems on BCI_env: 
@@ -83,7 +83,13 @@ BCI <- BCI[- index_na, ]
 nrow(BCI)
 
 
-# 5) ?
+# Should we convert something into a factor?
+# BCI_env$Habitat <- factor(BCI_env$Habitat,
+                          levels = c("Swamp", "OldLow", "OldSlope", "OldHigh", "Young"),
+                          ordered = T)
+
+
+# 5) ???
 # plot the univariate distribution (so the distribution of just one variable)
 # we have numerical variables and categorical variables
 barplot(BCI_env)  
@@ -98,23 +104,51 @@ str(BCI)
 
 # 7a)
 # I use specnumber to calculate species richness 
-sr <- specnumber(BCI)
-sort(specnumber(BCI, MARGIN = 2))
-plot(sort(specnumber(BCI, MARGIN = 2), decreasing = T))
+# By doing BCI_env$sr I create another column in the BCI_env matrix
+BCI_env$sr <- specnumber(BCI)
+sort(specnumber(BCI, MARGIN = 2))  # Maybe not necessary
+plot(sort(specnumber(BCI, MARGIN = 2), decreasing = T))  # Maybe not necessary
 
-# add it to the environmental variables dataframe as a new column.
-# Can be BCI_env$sr <- specnumber(BCI) but I don't know
 
 # 7b)
 summary(sr)
 
 
-hist(sr, main = "", xlab = "species richness", ylab = "number of variables")
+# 7c) 
+barplot(table(BCI_env$Habitat))
+
+
+# I don't know if this is useful, I plotted the species richness with the number of variables
 # to export (res is for resolution): 
 # I have to modify width and lenght because the margins are not enough for the resolution I chose
 png("Figure1.png", res = 300, width = 3000, height = 2000)
 hist(sr, main = "", xlab = "species richness", ylab = "number of variables")
-dev.off
+dev.off  # DOESNT WORK
 
 
+# 8)
+# This plot a numerical variable and a categorical variable, that's why I used boxplot (don't know if it's valid)
+boxplot(BCI_env$sr ~ BCI_env$Habitat)  
+
+# Two numerical variables (scatterplot)
+plot(BCI_env$Elevation, BCI_env$sr)
+# Correlation test
+cor.test(BCI_env$Elevation, BCI_env$sr)  # standard deviation is zero
+# Regression model
+lm(sr ~ Elevation, data = BCI_env)
+summary(lm(sr ~ Elevation, data = BCI_env))
+
+plot(BCI_env$Precipitation, BCI_env$sr)
+# Correlation test
+cor.test(BCI_env$Precipitation, BCI_env$sr)  # standard deviation is zero
+# Regression model
+lm(sr ~ Precipitation, data = BCI_env)
+summary(lm(sr ~ Precipitation, data = BCI_env))
+
+plot(BCI_env$EnvHet, BCI_env$sr)
+# Correlation test
+cor.test(BCI_env$EnvHet, BCI_env$sr)  # negative correlation
+# Regression model
+lm(sr ~ EnvHet, data = BCI_env)
+summary(lm(sr ~ EnvHet, data = BCI_env))
 
