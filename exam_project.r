@@ -28,8 +28,9 @@ ncol(BCI)  # Number of species
 nrow(BCI_env)  # Number of observations
 ncol(BCI_env)  # Number of environmental variables
 
-# dim(BCI)
-# dim(BCI_env)
+# str(BCI)
+# str(BCI_env)
+# These are bidimensional objects (matrices and data frames)
 
 
 # 3)
@@ -83,7 +84,7 @@ BCI <- BCI[- index_na, ]
 nrow(BCI)
 
 
-# Should we convert something into a factor?
+# Should we convert something into a factor? Maybe not
 # BCI_env$Habitat <- factor(BCI_env$Habitat,
                           levels = c("Swamp", "OldLow", "OldSlope", "OldHigh", "Young"),
                           ordered = T)
@@ -91,6 +92,7 @@ nrow(BCI)
 
 # 5) ???
 # plot the univariate distribution (so the distribution of just one variable)
+# You can use ggplot2
 # we have numerical variables and categorical variables
 barplot(BCI_env)  
 
