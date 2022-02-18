@@ -156,8 +156,9 @@ cor.test(BCI_env$Precipitation, BCI_env$sr)  # standard deviation is zero
 lm(sr ~ Precipitation, data = BCI_env)
 summary(lm(sr ~ Precipitation, data = BCI_env))
 
+# This is useful
 plot(BCI_env$sr,BCI_env$EnvHet, main = "correlation plot", xlab = "Species richness", ylab = "EnvHet" )
-# Correlation test
+# Pearson's correlation test
 cor.test(BCI_env$EnvHet, BCI_env$sr)  
 # p-value is high so the correlation is significant
 # Correlation (cor) is close to zero, so it is weak (?)
