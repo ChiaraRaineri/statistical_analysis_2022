@@ -1,6 +1,8 @@
 # install.packages("vegan")
 library(vegan)
 
+library(vegan)
+library(ggplot2)
 
 # 1)
 # Creating sub-folders
@@ -86,8 +88,8 @@ nrow(BCI)
 
 # Should we convert something into a factor? Maybe not
 # BCI_env$Habitat <- factor(BCI_env$Habitat,
-                          levels = c("Swamp", "OldLow", "OldSlope", "OldHigh", "Young"),
-                          ordered = T)
+#                          levels = c("Swamp", "OldLow", "OldSlope", "OldHigh", "Young"),
+#                          ordered = T)
 
 
 # 5) ???
@@ -103,13 +105,15 @@ barplot(BCI_env)
 BCI <- decostand(BCI, method = “pa”)
 str(BCI)
 
+# write.csv(BCI, file = "BCI.csv")
+
 
 # 7a)
 # I use specnumber to calculate species richness 
 # By doing BCI_env$sr I create another column in the BCI_env matrix
 BCI_env$sr <- specnumber(BCI)
-sort(specnumber(BCI, MARGIN = 2))  # Maybe not necessary
-plot(sort(specnumber(BCI, MARGIN = 2), decreasing = T))  # Maybe not necessary
+# sort(specnumber(BCI, MARGIN = 2))  # Maybe not necessary
+# plot(sort(specnumber(BCI, MARGIN = 2), decreasing = T))  # Maybe not necessary
 
 
 # 7b)
@@ -117,7 +121,12 @@ summary(sr)
 
 
 # 7c) 
-barplot(table(BCI_env$Habitat))
+p <- ggplot(data = BCI_env, aes(x = Habitat, y =sr, fill= Habitat)) +
+geom_boxplot() +
+labs(title = "Distribution of species richness in respect with the variable Habitat", x = "Habitat", y = "Species richness") + 
+geom_point()
+pl <- p + scale_fill_discrete(name = "Legend")
+pl
 
 
 # I don't know if this is useful, I plotted the species richness with the number of variables
@@ -129,28 +138,34 @@ dev.off  # DOESNT WORK
 
 
 # 8)
-# This plot a numerical variable and a categorical variable, that's why I used boxplot (don't know if it's valid)
-boxplot(BCI_env$sr ~ BCI_env$Habitat)  
-
 # Two numerical variables (scatterplot)
-plot(BCI_env$Elevation, BCI_env$sr)
+
+# useless
+plot(BCI_env$sr,BCI_env$Elevation, main = "correlation plot", xlab = "Species richness", ylab = "Elevation")
 # Correlation test
 cor.test(BCI_env$Elevation, BCI_env$sr)  # standard deviation is zero
 # Regression model
 lm(sr ~ Elevation, data = BCI_env)
 summary(lm(sr ~ Elevation, data = BCI_env))
 
-plot(BCI_env$Precipitation, BCI_env$sr)
+# useless
+plot(BCI_env$sr,BCI_env$Precipitation, main = "correlation plot", xlab = "Species richness", ylab = "Precipitation")
 # Correlation test
 cor.test(BCI_env$Precipitation, BCI_env$sr)  # standard deviation is zero
 # Regression model
 lm(sr ~ Precipitation, data = BCI_env)
 summary(lm(sr ~ Precipitation, data = BCI_env))
 
-plot(BCI_env$EnvHet, BCI_env$sr)
+plot(BCI_env$sr,BCI_env$EnvHet, main = "correlation plot", xlab = "Species richness", ylab = "EnvHet" )
 # Correlation test
-cor.test(BCI_env$EnvHet, BCI_env$sr)  # negative correlation
+cor.test(BCI_env$EnvHet, BCI_env$sr)  
+# p-value is high so the correlation is significant
+# Correlation (cor) is close to zero, so it is weak (?)
+
 # Regression model
-lm(sr ~ EnvHet, data = BCI_env)
-summary(lm(sr ~ EnvHet, data = BCI_env))
+reg_model <- lm(sr ~ EnvHet, data = BCI_env)
+summary(reg_model)
+# This gives the intercept and the slope
+# Multiple R-squared significance?
+# Are the residuals normally distributed?
 
