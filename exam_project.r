@@ -1,7 +1,5 @@
 # install.packages("vegan")
 library(vegan)
-
-library(vegan)
 library(ggplot2)
 
 # 1)
@@ -45,6 +43,14 @@ str(BCI_env)  # Data frame
 # The elements that are missing from BCI_env are the names of the columns
 # I solved it in the process of importing data by adding sep
 
+# Convert characters into factors
+# I should order Age.cat
+# unique factors within a vector
+unique(BCI_env$Age.cat)  # I have only c2 and c3
+factor(BCI_env$Age.cat, levels = c("c2", "c3"), ordered = T)
+factor(BCI_env$Habitat, levels = c("OldSlope", "OldLow", "Swamp", "OldHigh", "Young"))
+factor(BCI_env$Stream, levels = c("Yes", "No"))
+
 
 # 4)
 # Let's do summary statistics
@@ -53,15 +59,8 @@ summary(BCI)
 summary(BCI_env)
 
 
-# Removing NAs (it removes the whole row, not only the single cell)
-na.omit(BCI_env)
-# To check what happened
-nrow(BCI_env)
-nrow(na.omit(BCI_env))
-# But now I have BCI that has still 50 rows, so this is not a good method
-
-# Instead I should first check if there are NAs
-# is.na(BCI_env)
+# I should check if there are NAs
+# NAs can be removed with the na.omit function (SPIEGA I PASSAGGI)
 index_na <- which(is.na(BCI_env), arr.ind = T)
 index_na <- index_na[, 1]  # To have just the first column 
 # Now I have a matrix that tells me exactly where the NA value is
@@ -69,7 +68,10 @@ index_na <- index_na[, 1]  # To have just the first column
 BCI_env <- na.omit(BCI_env)
 nrow(BCI_env)
 BCI <- BCI[- index_na, ]
-nrow(BCI)
+str(BCI)
+
+write.table(x = BCI_env, file = "outputs/BCI_env.txt")
+# I could write just outputs because at the beginning I created a project
 
 # But there are also empty cells that are not NAs
 unique(BCI_env$Habitat)
@@ -80,26 +82,21 @@ BCI_env <- read.table("data/BCI_env.txt",
                       sep = " ", 
                       header = T,
                       na.strings = c("NA", ""))
-BCI_env
-index_na <- which(is.na(BCI_env), arr.ind = T)
-index_na <- index_na[, 1]
-BCI_env <- na.omit(BCI_env)
-nrow(BCI_env)
-BCI <- BCI[- index_na, ]
-nrow(BCI)
 
 
-# Should we convert something into a factor? Maybe not
-# BCI_env$Habitat <- factor(BCI_env$Habitat,
-#                          levels = c("Swamp", "OldLow", "OldSlope", "OldHigh", "Young"),
-#                          ordered = T)
 
 
-# 5) ???
+# 5) 
 # plot the univariate distribution (so the distribution of just one variable)
 # You can use ggplot2
 # we have numerical variables and categorical variables
-barplot(BCI_env)  
+png("outputs/Figure1.png", res = 300, width = 3000, heigh = 2000)
+barplot(table(BCI_env$Habitat),
+        main = "Types of Habitat",
+        ylim = c(0, 26),
+        ylab = "Frequency",
+        xlab = "Habitat type")
+dev.off()
 
 
 # 6)
