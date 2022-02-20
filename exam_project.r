@@ -30,13 +30,18 @@ ncol(BCI)  # Number of species
 nrow(BCI_env)  # Number of observations
 ncol(BCI_env)  # Number of environmental variables
 
-# str(BCI)
-# str(BCI_env)
-# These are bidimensional objects (matrices and data frames)
-
 
 # 3)
 ?BCI
+# BCI is a tree counts in Barro Colorado Island, that is an island within Panama 
+# Tree counts in 1-hectare plots in the Barro Colorado Island and associated site information
+
+# They are bidimensional data frames
+# In a data frame in a column I have the same values, while in a row I have different values
+# In a community matrix I have always the same values
+# The difference between a list and a data frame is that a data frame is a particular kind of list where every component has the same length
+str(BCI)  # Community matrix
+str(BCI_env)  # Data frame
 # The elements that are missing from BCI_env are the names of the columns
 # I solved it in the process of importing data by adding sep
 
@@ -47,8 +52,6 @@ ncol(BCI_env)  # Number of environmental variables
 summary(BCI)
 summary(BCI_env)
 
-str(BCI)
-str(BCI_env)
 
 # Removing NAs (it removes the whole row, not only the single cell)
 na.omit(BCI_env)
