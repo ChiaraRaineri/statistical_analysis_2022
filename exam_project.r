@@ -90,6 +90,7 @@ BCI_env <- read.table("data/BCI_env.txt",
 # plot the univariate distribution (so the distribution of just one variable)
 # You can use ggplot2
 # we have numerical variables and categorical variables
+# Distribution of habitat types:
 png("outputs/Figure1.png", res = 300, width = 3000, heigh = 2000)
 barplot(table(BCI_env$Habitat),
         main = "Types of Habitat",
@@ -97,67 +98,60 @@ barplot(table(BCI_env$Habitat),
         ylab = "Frequency",
         xlab = "Habitat type")
 dev.off()
+# Young and swamp are rare categories or even outlayers
+
+# How the streams are distributed among the different habitats
+png("outputs/Figure2.png", res = 300, width = 3000, heigh = 2000)
+barplot(table(BCI_env$Stream, BCI_env$Habitat),
+        main = "Presence or absence of Stream",
+        ylim = c(0, 26),
+        ylab = "Frequency",
+        xlab = "Habitat type",
+       legend.text = T)
+dev.off()
 
 
 # 6)
 # I use the function decostand with method pa to convert the table into presence-absence
 # The community matrix!
-BCI <- decostand(BCI, method = “pa”)
-str(BCI)
+BCI <- decostand(BCI, method = "pa")
 
-# write.csv(BCI, file = "BCI.csv")
+write.csv(x = BCI, file = "outputs/BCI.csv")
 
 
 # 7a)
 # I use specnumber to calculate species richness 
 # By doing BCI_env$sr I create another column in the BCI_env matrix
 BCI_env$sr <- specnumber(BCI)
-# sort(specnumber(BCI, MARGIN = 2))  # Maybe not necessary
-# plot(sort(specnumber(BCI, MARGIN = 2), decreasing = T))  # Maybe not necessary
+
+# If I have to calculate species richness without specnumber I should count the values major than zero (?)
 
 
 # 7b)
-summary(sr)
+summary(BCI_env$sr)
 
 
 # 7c) 
-p <- ggplot(data = BCI_env, aes(x = Habitat, y =sr, fill= Habitat)) +
-geom_boxplot() +
-labs(title = "Distribution of species richness in respect with the variable Habitat", x = "Habitat", y = "Species richness") + 
-geom_point()
-pl <- p + scale_fill_discrete(name = "Legend")
-pl
-
-
-# I don't know if this is useful, I plotted the species richness with the number of variables
-# to export (res is for resolution): 
-# I have to modify width and lenght because the margins are not enough for the resolution I chose
-png("Figure1.png", res = 300, width = 3000, height = 2000)
-hist(sr, main = "", xlab = "species richness", ylab = "number of variables")
-dev.off  # DOESNT WORK
+png("outputs/Figure3.png", res = 300, width = 3000, heigh = 2000)
+boxplot(BCI_env$sr ~ BCI_env$Habitat,
+        main = "Distribution of species richness in respect with Habitat",
+        ylim = c(70, 110),
+        ylab = "Species richness",
+        xlab = "Habitat type")
+dev.off()
+# Young and swamp are almost symmetrical because they have few observations
+# The group with the highest variance is OldLow (larger max and min)
 
 
 # 8)
+# Species richness with respect to EnvHet
 # Two numerical variables (scatterplot)
+png("outputs/Figure4.png", res = 300, width = 3000, heigh = 2000)
+plot(BCI_env$EnvHet, BCI_env$sr,
+     xlab = "Environmental heterogeneity", 
+     ylab = "Species richness")
+dev.off()
 
-# useless
-plot(BCI_env$sr,BCI_env$Elevation, main = "correlation plot", xlab = "Species richness", ylab = "Elevation")
-# Correlation test
-cor.test(BCI_env$Elevation, BCI_env$sr)  # standard deviation is zero
-# Regression model
-lm(sr ~ Elevation, data = BCI_env)
-summary(lm(sr ~ Elevation, data = BCI_env))
-
-# useless
-plot(BCI_env$sr,BCI_env$Precipitation, main = "correlation plot", xlab = "Species richness", ylab = "Precipitation")
-# Correlation test
-cor.test(BCI_env$Precipitation, BCI_env$sr)  # standard deviation is zero
-# Regression model
-lm(sr ~ Precipitation, data = BCI_env)
-summary(lm(sr ~ Precipitation, data = BCI_env))
-
-# This is useful
-plot(BCI_env$sr,BCI_env$EnvHet, main = "correlation plot", xlab = "Species richness", ylab = "EnvHet" )
 # Pearson's correlation test
 cor.test(BCI_env$EnvHet, BCI_env$sr)  
 # p-value is high so the correlation is significant
