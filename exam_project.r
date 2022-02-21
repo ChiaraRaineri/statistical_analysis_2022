@@ -150,17 +150,21 @@ png("outputs/Figure4.png", res = 300, width = 3000, heigh = 2000)
 plot(BCI_env$EnvHet, BCI_env$sr,
      xlab = "Environmental heterogeneity", 
      ylab = "Species richness")
+     abline(lm$coefficients[1], lm$coefficients[2], col = "red")
 dev.off()
 
 # Pearson's correlation test
 cor.test(BCI_env$EnvHet, BCI_env$sr)  
-# p-value is high so the correlation is significant
-# Correlation (cor) is close to zero, so it is weak (?)
+# p-value is high so the correlation is not significant, so we can't reject the null hypothesis
+# Correlation (cor) is close to zero, so it is not significant
 
 # Regression model
-reg_model <- lm(sr ~ EnvHet, data = BCI_env)
-summary(reg_model)
+lm <- lm(sr ~ EnvHet, data = BCI_env)
+summary(lm)
 # This gives the intercept and the slope
-# Multiple R-squared significance?
+# Multiple R-squared is low: poor fit of the model (EnvHet doesn't explain anything about the species richness in our model)
+# Only a small percentage (2,2 %) of variability in our model is explained
 # Are the residuals normally distributed?
+
+
 
