@@ -173,6 +173,7 @@ summary(lm)
 # CODE ON R STUDIO
 
 # Statistical analysis R project
+# Chiara Raineri and Komal Iftikhar
 
 
 # Task 1
@@ -187,7 +188,7 @@ library(vegan)
 
 # Task 2
 # Importing the datasets
-BCI <- read.csv("data/BCI.csv")
+BCI <- read.csv("data/BCI.csv")  # Community matrix
 BCI_env <- read.table("data/BCI_env.txt", 
                       sep = " ", 
                       header = T,
@@ -236,6 +237,8 @@ BCI_env$Habitat <- factor(BCI_env$Habitat,
 # Transforming Geology into a factor (not ordered)
 BCI_env$Geology <- factor(BCI_env$Geology, 
                           levels = c("Tb"))
+
+str(BCI_env)
 
 
 # Task 4
